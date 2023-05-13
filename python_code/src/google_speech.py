@@ -1,20 +1,3 @@
-# import os
-# from google.cloud import speech
-
-# def setup_speech(credentials):
-#     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials
-#     return speech.SpeechClient()
-
-# def transcribe_audio(client, audio_data):
-#     response = client.recognize(
-#         config={"language_code": "en-US"},
-#         audio={"content": audio_data}
-#     )
-
-#     for result in response.results:
-#         print("Transcript: {}".format(result.alternatives[0].transcript))
-
-
 import speech_recognition as sr
 
 def setup_recognizer():
