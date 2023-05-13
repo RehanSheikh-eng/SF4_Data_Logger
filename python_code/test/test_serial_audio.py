@@ -1,7 +1,7 @@
 import unittest
 import serial
 from unittest.mock import MagicMock, patch
-from ..src.serial_audio import setup_serial, listen_for_audio
+from src.serial_audio import setup_serial, listen_for_audio
 
 
 class TestSerialAudio(unittest.TestCase):
