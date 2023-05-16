@@ -17,7 +17,7 @@ void loop() {
     int min = 1024;
     int max = 0;
 
-    for (int i = 0; i < 90; ++i) {
+    for (int i = 0; i < 900; ++i) {
       int val = analogRead(microphonePin);
       max = max(max, val);
       min = min(min, val);
