@@ -15,9 +15,10 @@ class TranscriptionService:
         audio.export(preprocessed_audio_file, format='wav')
         return preprocessed_audio_file
 
-    def transcribe(self, filename):
-        preprocessed_audio = self.preprocess_audio(filename)
-        with sr.AudioFile(preprocessed_audio) as source:
+    def transcribe(self, filename, preprocess_audio=False):
+        if preprocess_audio:
+            filename = self.preprocess_audio(filename)
+        with sr.AudioFile(filename) as source:
             audio_data = self.recognizer.record(source)
         try:
             transcript = self.recognizer.recognize_google(audio_data)
