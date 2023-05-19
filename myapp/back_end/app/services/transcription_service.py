@@ -29,5 +29,4 @@ class TranscriptionService:
             response = jsonify({"error": f"Could not request results from Google Speech Recognition service; {str(e)}"})
         finally:
             os.remove(filename) # remove the original file
-            os.remove(preprocessed_audio) # remove the preprocessed file
         return response
