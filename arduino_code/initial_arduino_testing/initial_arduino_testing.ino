@@ -5,7 +5,7 @@ int flag = 0;
 
 void setup() {
 //  pinMode(LED,OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
@@ -13,21 +13,8 @@ void loop() {
 
     //digitalWrite(LED,HIGH);
     //flag = 0;
-    
-    int min = 1024;
-    int max = 0;
 
-    for (int i = 0; i < 900; ++i) {
-      int val = analogRead(microphonePin);
-      max = max(max, val);
-      min = min(min, val);
-    }
-
-    int delta = max - min;
-
-    Serial.println(delta);
-  //  Serial.print(delta);
-  //  Serial.print(" ");
+    Serial.write(analogRead(microphonePin)>>2);
   //}
   //else {
     //digitalWrite(LED,LOW);
