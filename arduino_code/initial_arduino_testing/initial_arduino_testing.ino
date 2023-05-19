@@ -4,15 +4,15 @@ const int microphonePin = A0;
 int flag = 0;
 
 void setup() {
-  pinMode(LED,OUTPUT);
+//  pinMode(LED,OUTPUT);
   Serial.begin(9600);
 }
 
 void loop() {
-  if (digitalRead(button) == LOW) {
+  //if (digitalRead(button) == LOW) {
 
-    digitalWrite(LED,HIGH);
-    flag = 0;
+    //digitalWrite(LED,HIGH);
+    //flag = 0;
     
     int min = 1024;
     int max = 0;
@@ -25,14 +25,15 @@ void loop() {
 
     int delta = max - min;
 
-    Serial.print(delta);
-    Serial.print(" ");
-  }
-  else {
-    digitalWrite(LED,LOW);
-    if (flag == 0){
-      Serial.println();
-      flag = 1;
-    }
-  }
+    Serial.println(delta);
+  //  Serial.print(delta);
+  //  Serial.print(" ");
+  //}
+  //else {
+    //digitalWrite(LED,LOW);
+    //if (flag == 0){
+      //Serial.println();
+      //flag = 1;
+    //}
+  //}
 }
