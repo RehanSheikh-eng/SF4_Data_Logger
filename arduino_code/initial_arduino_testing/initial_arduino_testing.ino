@@ -1,26 +1,47 @@
-#define LED 2
-#define button 3
-const int microphonePin = A0;
-int flag = 0;
+#define green 4
+#define red 3
+#define button 2
+const int mic = A0;
+int flagWrite = 0;
+int flagRead = 0;
 
 void setup() {
-//  pinMode(LED,OUTPUT);
+  pinMode(green,OUTPUT);
+  pinMode(red,OUTPUT);
+  pinMode(button,INPUT);
   Serial.begin(115200);
 }
 
 void loop() {
-  //if (digitalRead(button) == LOW) {
-
-    //digitalWrite(LED,HIGH);
-    //flag = 0;
-
-    Serial.write(analogRead(microphonePin)>>2);
-  //}
-  //else {
-    //digitalWrite(LED,LOW);
-    //if (flag == 0){
-      //Serial.println();
-      //flag = 1;
-    //}
-  //}
+  if (flagWrite == 1){
+    Serial.write(analogRead(mic)>>2);
+    if (digitalRead(button) == HIGH) {
+      while (digitalRead(button) == HIGH){
+        delay(0);
+      }
+      Serial.write(0);
+      digitalWrite(green,LOW);
+      digitalWrite(red,HIGH);
+      flagWrite = 0;
+      flagRead = 1;
+    }
+  }
+  else if (flagRead == 1){
+    if (Serial.available()){
+      if (Serial.read() == 0){
+        digitalWrite(red,LOW);
+        flagRead = 0;
+      }
+    }
+  }
+  else{
+    if (digitalRead(button) == HIGH) {
+      while (digitalRead(button) == HIGH){
+        delay(0);
+      }
+      Serial.write(0);
+      digitalWrite(green,HIGH);
+      flagWrite = 1;
+    }
+  }
 }
