@@ -1,10 +1,11 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-
 # C extensions
 *.so
 *.env
+myapp/back_end/sf4-datalogger-firebase-adminsdk-fk860-d7a1a6c3c6.json
+
 # Distribution / packaging
 bin/
 build/
@@ -19,18 +20,15 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
-
 # Unit test / coverage reports
 .tox/
 .coverage
 .cache
 nosetests.xml
 coverage.xml
-
 # Translations
 *.mo
 
