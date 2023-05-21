@@ -20,13 +20,12 @@ class TranscriptionService:
             filename = self.preprocess_audio(filename)
         with sr.AudioFile(filename) as source:
             audio_data = self.recognizer.record(source)
+        transcript = ""
         try:
             transcript = self.recognizer.recognize_google(audio_data)
-            response = jsonify({"transcription": transcript})
         except sr.UnknownValueError:
-            response = jsonify({"error": "Google Speech Recognition could not understand audio"})
+            print("Google Speech Recognition could not understand audio")
         except sr.RequestError as e:
-            response = jsonify({"error": f"Could not request results from Google Speech Recognition service; {str(e)}"})
-        finally:
-            os.remove(filename) # remove the original file
-        return response
+            print(f"Could not request results from Google Speech Recognition service; {str(e)}")
+        return transcript
+
