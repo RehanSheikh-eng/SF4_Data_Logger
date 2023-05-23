@@ -13,6 +13,8 @@ void setup() {
   pinMode(red,OUTPUT);
   pinMode(button,INPUT);
   Serial.begin(115200);
+  TCCR0B = 0b00000001;
+  TCCR0A = 0b00000011;
 }
 
 void loop() {
@@ -33,7 +35,7 @@ void loop() {
     if (Serial.available()){
       //Serial.print(Serial.read());
       //audio = Serial.read();
-      analogWrite(speaker, Serial.read()<<2);//audio);
+      analogWrite(speaker, Serial.read());//audio);
       //if (audio == 0){
       //  digitalWrite(red,LOW);
       //  flagRead = 0;
