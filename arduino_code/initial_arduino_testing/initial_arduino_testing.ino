@@ -1,15 +1,20 @@
+#define speaker 6
 #define green 4
 #define red 3
 #define button 2
 const int mic = A0;
 int flagWrite = 0;
 int flagRead = 0;
+int audio = -1;
 
 void setup() {
+  pinMode(speaker,OUTPUT);
   pinMode(green,OUTPUT);
   pinMode(red,OUTPUT);
   pinMode(button,INPUT);
   Serial.begin(115200);
+  TCCR0B = 0b00000001;
+  TCCR0A = 0b00000011;
 }
 
 void loop() {
@@ -28,10 +33,13 @@ void loop() {
   }
   else if (flagRead == 1){
     if (Serial.available()){
-      if (Serial.read() == 0){
-        digitalWrite(red,LOW);
-        flagRead = 0;
-      }
+      //Serial.print(Serial.read());
+      //audio = Serial.read();
+      analogWrite(speaker, Serial.read());//audio);
+      //if (audio == 0){
+      //  digitalWrite(red,LOW);
+      //  flagRead = 0;
+      //}
     }
   }
   else{
