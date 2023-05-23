@@ -3,7 +3,7 @@ import uuid
 
 class FirebaseService:
     def __init__(self):
-        self.cred = credentials.Certificate("C:/Users/relic/Documents/School/Engineering_Cam/Part IIA/SF4/SF4_Data_Logger/myapp/back_end/sf4-datalogger-firebase-adminsdk-fk860-bfaeafc479.json")
+        self.cred = credentials.Certificate("C:/Users/relic/Documents/School/Engineering_Cam/Part IIA/SF4/SF4_Data_Logger/myapp/back_end/sf4-datalogger-firebase-adminsdk-fk860-d7a1a6c3c6.json")
         initialize_app(self.cred, {
             'storageBucket': 'sf4-datalogger.appspot.com',
         })
