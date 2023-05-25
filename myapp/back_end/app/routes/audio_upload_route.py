@@ -28,7 +28,7 @@ def audio_upload():
     file.save(filename)
 
     # Transcribe the audio to text
-    transcription_response = transcription_service.transcribe(filename, preprocess_audio=False)
+    transcription_response = transcription_service.transcribe(filename)
     print(transcription_response)
 
     # Generate a story from the transcription
