@@ -1,13 +1,23 @@
-import React from 'react';
-import FileUpload from './components/FileUpload';
+// App.js
+import React, { useState } from 'react';
+import { Divider, Box } from '@mui/material';
+import StoriesSidebar from './components/StoriesSidebar';
+import StoryDisplay from './components/StoryDisplay';
 
-function App() {
+const App = () => {
+  const [selectedStory, setSelectedStory] = useState(null);
+
+  const handleStoryClick = (story) => {
+    setSelectedStory(story);
+  };
+
   return (
-    <div className="App">
-      <h1>Audio Transcription Service</h1>
-      <FileUpload />
-    </div>
+    <Box sx={{ display: 'flex', flexDirection: 'row', p: 1 }}>
+      <StoriesSidebar onStoryClick={handleStoryClick} />
+      <Divider orientation="vertical" flexItem />
+      <StoryDisplay story={selectedStory} />
+    </Box>
   );
-}
+};
 
 export default App;
