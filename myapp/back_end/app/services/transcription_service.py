@@ -8,8 +8,6 @@ class TranscriptionService:
         self.recognizer = sr.Recognizer()
 
     def transcribe(self, filename):
-        if preprocess_audio:
-            filename = self.preprocess_audio(filename)
         with sr.AudioFile(filename) as source:
             audio_data = self.recognizer.record(source)
         transcript = ""
