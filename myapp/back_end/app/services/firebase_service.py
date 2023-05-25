@@ -18,6 +18,7 @@ class FirebaseService:
     def save_to_firestore(self, collection_name, document_name, data):
         unique_id = str(uuid.uuid4())
         doc_ref = self.db.collection(collection_name).document(unique_id)
+        data["id"] = unique_id
         doc_ref.set(data)
         return unique_id
 

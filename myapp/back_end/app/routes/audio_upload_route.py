@@ -38,7 +38,7 @@ def audio_upload():
     #tts_response = text_to_speech_service.generate_speech(story_response)
 
     # Save the transcript and story to Firestore
-    firebase_service.save_to_firestore('stories', filename, {
+    unique_id = firebase_service.save_to_firestore('stories', filename, {
         "transcription": transcription_response,
         "story": story_response,
     })
@@ -57,6 +57,7 @@ def audio_upload():
     #     "tts": f"{filename}_tts.wav"
     # })
     return jsonify({
+        "id": unique_id,
         "transcription": transcription_response,
         "story": story_response,
     })
