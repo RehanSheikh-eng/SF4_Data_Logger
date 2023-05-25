@@ -1,5 +1,4 @@
 from firebase_admin import storage, firestore, initialize_app, credentials, _apps
-import uuid
 
 class FirebaseService:
     def __init__(self):
@@ -14,13 +13,14 @@ class FirebaseService:
     def upload_to_storage(self, filename, file_obj):
         blob = self.bucket.blob(filename)
         blob.upload_from_file(file_obj)
+        # Make the blob publicly viewable
+        blob.make_public()
+        # Return the blob's public url
+        return blob.public_url
     
-    def save_to_firestore(self, collection_name, document_name, data):
-        unique_id = str(uuid.uuid4())
+    def save_to_firestore(self, collection_name, unique_id, data):
         doc_ref = self.db.collection(collection_name).document(unique_id)
-        data["id"] = unique_id
         doc_ref.set(data)
-        return unique_id
 
     def get_all_from_collection(self, collection_name):
         docs = self.db.collection(collection_name).stream()
