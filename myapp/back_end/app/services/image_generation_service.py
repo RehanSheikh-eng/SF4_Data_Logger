@@ -1,12 +1,14 @@
+from dotenv import load_dotenv
 import base64
 import os
 import requests
 
 class ImageGenerationService:
     def __init__(self):
+        load_dotenv()
         self.engine_id = "stable-diffusion-v1-5"
         self.api_host = os.getenv('API_HOST', 'https://api.stability.ai')
-        self.api_key = os.getenv("STABILITY_API_KEY")
+        self.api_key = os.getenv("STABLE_DIFFUSION_KEY")
 
         if self.api_key is None:
             raise Exception("Missing Stability API key.")
@@ -39,8 +41,18 @@ class ImageGenerationService:
 
         data = response.json()
 
-        for i, image in enumerate(data["artifacts"]):
-            with open(f"./out/v1_txt2img_{i}.png", "wb") as f:
-                f.write(base64.b64decode(image["base64"]))
+        # Save only the first image to a local file
+        image = data["artifacts"][0]
+        image_content = base64.b64decode(image["base64"])
 
-        return 'Image generated successfully'
+        # Define the directory and the filename
+        dir_path = "./out"
+        image_filename = f"{dir_path}/v1_txt2img_0.png"
+
+        # Create the directory if it doesn't exist
+        os.makedirs(dir_path, exist_ok=True)
+
+        with open(image_filename, "wb") as f:
+            f.write(image_content)
+
+        return image_filename
