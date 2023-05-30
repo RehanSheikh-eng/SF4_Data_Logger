@@ -10,7 +10,7 @@ const StoriesSidebar = ({ onStoryClick }) => {
     <List component="nav">
       {stories.map(story => (
         <ListItem button key={story.id} onClick={() => onStoryClick(story)}>
-          <ListItemText primary={`Story ID: ${story.id}`} />
+          <ListItemText primary={`Story ID: ${story.transcription}`} />
         </ListItem>
       ))}
     </List>
