@@ -54,18 +54,26 @@ print(Text)
 # Send text word by word to arduino
 TextList = Text.split()
 print(TextList)
-j = 0
 
+j = 0
 while (j < 20000000): # Initial delay to ensure Arduino is ready to receive text
     j += 1
 
 
+# Send text word by word to arduino
 for i in range(len(TextList)):
-    SerialData.write(bytes(str(len(TextList[i])) + TextList[i], 'utf-8')) # Length of each word sent before word
+    WordLength = len(TextList[i])
+    if (WordLength > 9): #If length of string has double digits, need to indicate to arduino using ~ symbol
+        SerialData.write(bytes('~' + str(WordLength - 10) + TextList[i], 'utf-8'))
+    else:
+        SerialData.write(bytes(str(WordLength) + TextList[i], 'utf-8'))
+    
+    # Further delay controls text rate, min = 1E6, max = 1E8?
     j = 0
-    while (j < 5000000): # Further delay controls text rate, min = 1E6, max = 1E8?
+    while (j < 5000000):
         j += 1
-SerialData.write(b'\xCF') # Send 0 byte to indicate end of text
+    
+SerialData.write(bytes('#', 'utf-8')) # Send # to indicate end of text
 
 #Close serial port resetting system
 SerialData.close()
