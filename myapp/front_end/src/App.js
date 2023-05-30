@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Divider, Box } from '@mui/material';
 import StoriesSidebar from './components/StoriesSidebar';
 import StoryDisplay from './components/StoryDisplay';
+import ControlPanel from './components/ControlPanel';
 
 const App = () => {
   const [selectedStory, setSelectedStory] = useState(null);
@@ -16,6 +17,7 @@ const App = () => {
       <StoriesSidebar onStoryClick={handleStoryClick} />
       <Divider orientation="vertical" flexItem />
       <StoryDisplay story={selectedStory} />
+      <ControlPanel></ControlPanel>
     </Box>
   );
 };
