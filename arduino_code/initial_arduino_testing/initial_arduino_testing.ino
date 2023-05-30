@@ -35,7 +35,7 @@ void loop() {
     if (Serial.available()){
       //Serial.print(Serial.read());
       //audio = Serial.read();
-      analogWrite(speaker, Serial.read());//audio);
+      analogWrite(speaker, Serial.read()<<2);//audio);
       //if (audio == 0){
       //  digitalWrite(red,LOW);
       //  flagRead = 0;
