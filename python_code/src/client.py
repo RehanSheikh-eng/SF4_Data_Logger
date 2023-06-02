@@ -72,8 +72,15 @@ def make_api_call():
     return response.json()
 
 def send_text_to_arduino(Text):
+
     TextList = Text.split()
+
     print(TextList)
+
+    # Send # to indicate start of text
+    SerialData.write(bytes('#', 'utf-8')) 
+
+    # Display Logic
     i = 0
     while i < len(TextList):
         WordLength = len(TextList[i])
@@ -84,7 +91,7 @@ def send_text_to_arduino(Text):
             SerialData.write(bytes('~' + str(WordLength - 10) + TextList[i], 'utf-8'))
         else:
             SerialData.write(bytes(str(WordLength) + TextList[i], 'utf-8'))
-        time.sleep(0.2 / playback_rate)  # Sleep for some time based on the playback rate
+        time.sleep(0.5 / playback_rate)  # Sleep for some time based on the playback rate
         i += 1
     SerialData.write(bytes('#', 'utf-8')) # Send # to indicate end of text
 
