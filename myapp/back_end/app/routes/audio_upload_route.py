@@ -8,10 +8,10 @@ from app.services.transcription_service import TranscriptionService
 from app.services.firebase_service import FirebaseService
 from app.services.story_generation_service import StoryGeneratorService
 from app.services.image_prompt_service import ImagePromptService
-#from app.services.image_generation_service import ImageGenerationService
+from app.services.image_generation_service import ImageGenerationService
 
 
-#image_generation_service = ImageGenerationService()
+image_generation_service = ImageGenerationService()
 image_prompt_service = ImagePromptService()
 story_generation_service = StoryGeneratorService()
 transcription_service = TranscriptionService()
@@ -47,13 +47,13 @@ def audio_upload():
     image_prompt = image_prompt_service.generate_image_prompt(story_response)
     print(f"Image Service Repsone: {image_prompt}")
 
-    # # Generate image from image prompt
-    # image_filename = image_generation_service.generate_image(image_prompt)
+    # Generate image from image prompt
+    image_filename = image_generation_service.generate_image(image_prompt)
 
 
-    # # Upload the generated image to Firebase Storage
-    # with open(image_filename, "rb") as image_file:
-    #     image_url = firebase_service.upload_to_storage(f"{unique_id}.png", image_file)
+    # Upload the generated image to Firebase Storage
+    with open(image_filename, "rb") as image_file:
+        image_url = firebase_service.upload_to_storage(f"{unique_id}.png", image_file)
 
     # Save the transcript, story, and image URL to Firestore
     firebase_service.save_to_firestore(collection_name='stories', unique_id=unique_id, data={
@@ -61,11 +61,11 @@ def audio_upload():
         "transcription": transcription_response,
         "story": story_response,
         "image_prompt": image_prompt,
-        # "image": image_url,
+        "image": image_url,
     })
 
     # # Delete the local image file once it's been uploaded to Firebase Storage
-    # os.remove(image_filename)
+    os.remove(image_filename)
     # Delete the local file once it's been uploaded to Firebase Storage
     os.remove(filename)
 
