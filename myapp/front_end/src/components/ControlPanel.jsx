@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import Slider from '@mui/material/Slider';
+import { Slider, IconButton, Typography, Box } from '@mui/material';
+import { PlayArrow, Pause } from '@mui/icons-material';
 
 const socket = io('http://localhost:5000'); // replace with your server address
 
@@ -43,17 +44,25 @@ function ControlPanel() {
   };
 
   return (
-    <div>
-      <button onClick={handlePlay}>Play</button>
-      <button onClick={handlePause}>Pause</button>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', m: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1}}>
+        <IconButton onClick={handlePlay} sx={{ mr: 2 }}>
+          <PlayArrow fontSize="large" />
+        </IconButton>
+        <IconButton onClick={handlePause} sx={{ ml: 2 }}>
+          <Pause fontSize="large" />
+        </IconButton>
+      </Box>
+      <Typography variant="h6">Playback Speed: {playbackRate}x</Typography>
       <Slider
         value={playbackRate}
         onChange={handleSliderChange}
         min={0.1}
         max={2}
         step={0.1}
+        sx={{ width: 400 }} // set the width of the slider here
       />
-    </div>
+    </Box>
   );
 }
 
