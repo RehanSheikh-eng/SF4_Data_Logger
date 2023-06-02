@@ -12,7 +12,7 @@ class StoryGeneratorService:
         api_key = os.getenv('AI21_API_KEY')
 
 
-        template = """Write a very short and engaging story with the following context:
+        template = """Write a short and engaging story with the following context:
         Context:
         {story_context}
 
