@@ -49,8 +49,8 @@ function ControlPanel() {
       <Slider
         value={playbackRate}
         onChange={handleSliderChange}
-        min={0}
-        max={1}
+        min={0.1}
+        max={2}
         step={0.1}
       />
     </div>

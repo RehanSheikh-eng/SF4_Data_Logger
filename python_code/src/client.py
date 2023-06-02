@@ -17,7 +17,6 @@ is_playing = True  # If the system is currently playing or paused
 playback_rate = 1.0  # The rate at which the text is being sent to the Arduino
 
 # Open serial connection, resetting Arduino
-SerialData = serial.Serial('com7', 115200)
 # Test mode
 test_mode = False
 
@@ -40,7 +39,7 @@ def handle_play():
 def handle_pause():
     global is_playing
     print("Pause event received")
-   is_playing = False
+    is_playing = False
 
 @sio.on('setPlaybackRate')
 def handle_set_playback_rate(data):
@@ -77,17 +76,23 @@ def send_text_to_arduino(Text):
     print(TextList)
     i = 0
     while i < len(TextList):
+        WordLength = len(TextList[i])
         if not is_playing:
             time.sleep(0.1)  # Sleep for a short while if not playing
             continue
-        SerialData.write(bytes(str(len(TextList[i])) + TextList[i], 'utf-8')) # Length of each word sent before word
-        time.sleep(1.0 / playback_rate)  # Sleep for some time based on the playback rate
+        if (WordLength > 9): #  If length of string has double digits, need to indicate to arduino using ~ symbol
+            SerialData.write(bytes('~' + str(WordLength - 10) + TextList[i], 'utf-8'))
+        else:
+            SerialData.write(bytes(str(WordLength) + TextList[i], 'utf-8'))
+        time.sleep(0.2 / playback_rate)  # Sleep for some time based on the playback rate
         i += 1
-    SerialData.write(b'\xCF') # Send 0 byte to indicate end of text
+    SerialData.write(bytes('#', 'utf-8')) # Send # to indicate end of text
 
 sio.connect('http://localhost:5000', wait_timeout = 10)
 
 while True:  # Adding the infinite loop here
+    SerialData = serial.Serial('com7', 115200)
+
     # Collecting data from serial port and convert to list of decimal integers
     ListData = read_serial_data()
 
@@ -108,8 +113,9 @@ while True:  # Adding the infinite loop here
             Text = response_data.get('story', '')
             print(Text)
     else:
-        Text = "This is a test response. No API call was made."
-
+        Text = """
+        Once upon a time, in a land far, far away, there lived a princess named Periwinkle. She was known for her beauty and kindness, and everyone in the kingdom loved her. One day, as Periwinkle was walking through the forest, she came across a small, injured bird. She took pity on the bird and scooped it up in her hands. "Don't worry, little one," she said, "I'll take care of you." She took the bird back to her castle and nursed it back to health. From that day on, she became known as the Princess of the Birds. And the moral of the story is, always be kind to those in need."
+        """
     # Send text word by word to Arduino
     send_text_to_arduino(Text)
 
