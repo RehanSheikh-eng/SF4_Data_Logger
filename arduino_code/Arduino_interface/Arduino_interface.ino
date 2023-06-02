@@ -3,7 +3,8 @@
 #include "rgb_lcd.h"
 
 // Match input and output pins to variables
-#define green 4
+#define green 5
+#define yellow 4
 #define red 3
 #define button 2
 const int mic = A0;
@@ -20,12 +21,14 @@ int DoubleDigits = 0;
 
 // Define flags (states) for overall operation
 int flagWrite = 0;
+int flagWait = 0;
 int flagRead = 0;
 
 void setup() {
   
   // Define digital pins as inputs or outputs
   pinMode(green,OUTPUT);
+  pinMode(yellow,OUTPUT);
   pinMode(red,OUTPUT);
   pinMode(button,INPUT);
 
@@ -37,6 +40,12 @@ void setup() {
     LineOne[i] = 0x14;
     LineTwo[i] = 0x14;
   }
+
+  // Display starting message
+  lcd.print("Press the button");
+  lcd.setCursor(0, 1);
+  lcd.print("give me an idea!");
+  lcd.setCursor(0, 0);
 }
 
 void loop() {
@@ -56,13 +65,31 @@ void loop() {
       // Send 0 byte to indicate recording is finished
       Serial.write(0);
       
-      // Change LED switched ON (red) to indicate to user recording is finished
-      digitalWrite(green,LOW);
-      digitalWrite(red,HIGH);
+      // Change LED switched ON (yellow) to indicate to user recording is finished
+      digitalWrite(red,LOW);
+      digitalWrite(yellow,HIGH);
 
       // Change state
       flagWrite = 0;
-      flagRead = 1;
+      flagWait = 1;
+    }
+  }
+  else if (flagWait == 1){ // Waiting
+    if (Serial.available() > 0){ // Check if Data received
+      
+      // Wait until beginning of text signal
+      if (Serial.read() == 35){
+        // Change LED switched ON (green) to indicate to user recording is finished
+        digitalWrite(yellow,LOW);
+        digitalWrite(green,HIGH);
+
+        // Clear display ready to start telling story
+        lcd.clear();
+
+        // Change state
+        flagWait = 0;
+        flagRead = 1;
+      }
     }
   }
   else if (flagRead == 1){ // Telling story
@@ -71,7 +98,7 @@ void loop() {
       // Store Character
       CharIn = Serial.read();
       if (CharIn == 35){ // End of text signal
-        digitalWrite(red,LOW); // Turn red LED OFF to indicate to user end of story
+        digitalWrite(green,LOW); // Turn red LED OFF to indicate to user end of story
         flagRead = 0; // Change state
       }
       else if (CharIn == 126){ // Word length has double digits signal
@@ -168,7 +195,7 @@ void loop() {
       }
 
       Serial.write(0); // Send 0 byte to indicate start of recording
-      digitalWrite(green,HIGH); // Turn green LED ON to indicate to user start of recording
+      digitalWrite(red,HIGH); // Turn green LED ON to indicate to user start of recording
       flagWrite = 1; // Change state
     }
   }
