@@ -3,12 +3,14 @@ from flask import Blueprint, request, jsonify
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import BadRequest
 import uuid
+import librosa
 
 from app.services.transcription_service import TranscriptionService
 from app.services.firebase_service import FirebaseService
 from app.services.story_generation_service import StoryGeneratorService
 from app.services.image_prompt_service import ImagePromptService
 from app.services.image_generation_service import ImageGenerationService
+from app.services.audio_processing_service import AudioProcessingService
 
 
 image_generation_service = ImageGenerationService()
@@ -18,6 +20,7 @@ transcription_service = TranscriptionService()
 firebase_service = FirebaseService()
 
 audio_upload_bp = Blueprint('audio_upload', __name__)
+
 
 @audio_upload_bp.route('/api/audio-upload', methods=['POST'])
 def audio_upload():
@@ -35,8 +38,15 @@ def audio_upload():
     # Generate a unique ID for the new story
     unique_id = str(uuid.uuid4())
 
-    # Transcribe the audio to text
-    transcription_response = transcription_service.transcribe(filename)
+    # Process the audio file
+    processed_audio = audio_processing_service.process_audio(filename, method='fb')
+
+    # Save the processed audio as a new file
+    processed_filename = f"{unique_id}_processed.wav"
+    librosa.output.write_wav(processed_filename, processed_audio, sr)
+
+    # Transcribe the processed audio to text
+    transcription_response = transcription_service.transcribe(processed_filename)
     print(f"Transcription Service Response: {transcription_response}")
 
     # Generate a story from the transcription
@@ -48,8 +58,7 @@ def audio_upload():
     print(f"Image Service Repsone: {image_prompt}")
 
     # Generate image from image prompt
-    image_filename = image_generation_service.generate_image(image_prompt)
-
+    image_filename = image_generation_service.generate_image(transcription_response)
 
     # Upload the generated image to Firebase Storage
     with open(image_filename, "rb") as image_file:
@@ -64,11 +73,12 @@ def audio_upload():
         "image": image_url,
     })
 
-    # # Delete the local image file once it's been uploaded to Firebase Storage
+    # Delete the local image file once it's been uploaded to Firebase Storage
     os.remove(image_filename)
-    # Delete the local file once it's been uploaded to Firebase Storage
-    os.remove(filename)
 
+    # Delete the local audio files once it's been uploaded to Firebase Storage
+    os.remove(filename)
+    os.remove(processed_filename)
 
     return jsonify({
         "id": unique_id,
@@ -77,3 +87,4 @@ def audio_upload():
         "image_prompt": image_prompt,
         "image": image_url,
     })
+
