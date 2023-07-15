@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 from langchain.llms import AI21
+from langchain.llms import Cohere
 from langchain import PromptTemplate, LLMChain
 
 class StoryGeneratorService:
@@ -9,8 +10,8 @@ class StoryGeneratorService:
         load_dotenv()
 
         # access the AI21_API_KEY environment variable
-        api_key = os.getenv('AI21_API_KEY')
-
+        ai21_api_key = os.getenv('AI21_API_KEY')
+        cohere_api_key = os.getenv('COHERE_API_KEY')
 
         template = """Write a short and engaging story with the following context:
         Context:
@@ -25,7 +26,7 @@ class StoryGeneratorService:
         )
 
 
-        self.llm = AI21(ai21_api_key=api_key)
+        self.llm = Cohere(cohere_api_key=cohere_api_key)
         self.llm_chain = LLMChain(prompt=prompt, llm=self.llm)
 
     def generate_story(self, story_context):
